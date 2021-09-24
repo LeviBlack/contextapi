@@ -1,24 +1,30 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
 import { Card, CardContent } from '@material-ui/core'
+import { BookContext } from '../Context/BookContext'
+import BookDetails from './BookDetails'
 
-class Booklist extends Component {
-    static contextType = ThemeContext
-    render() {
-        const { isLightTheme, light, dark } = this.context
-        const theme = isLightTheme ? light : dark
-        return (
-            <CardContent className='book-list' style={{ color: theme.syntax, background: theme.bg }}>
-                <ul>
-                    <li style={{ background: theme.ui }}>The way of kings</li>
-                    <li style={{ background: theme.ui }}>Berserk</li>
-                    <li style={{ background: theme.ui }}>the name of the wind</li>
-                </ul>
-            </CardContent>    
-            
-        ) 
-    }
-       
+const Booklist = () => {
+    const {isLightTheme, light, dark, toggleTheme} = useContext(ThemeContext)
+    const {books} = useContext(BookContext)
+    const theme = isLightTheme ? light : dark
+    return books.length ? (
+        <Card className='book-list' style={{ color: theme.syntax, background: theme.bg }}>
+            <ul>
+                {books.map(book => {
+                    return(
+                        (<BookDetails style={{ background: theme.ui }} book={ book } key={book.id}/>)
+                        
+                    )
+                })}
+            </ul>
+        </Card>    
+    ) : (
+        <div className='book-list' style={{ color: theme.syntax, background: theme.bg }}>No books to read. </div>
+    )
 }
 
 export default Booklist
+
+
+
